@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LPU CA COURSE</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+        background-color: #f4f4f4;
+      }
+      .logo-container {
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #4caf50;
+        color: white;
+      }
+      .green {
+        background-color: #c8e6c9;
+      }
+      .yellow {
+        background-color: #fff9c4;
+      }
+      .red {
+        background-color: #ffcccb;
+      }
+      .orange {
+        background-color: #ffebcc;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 20px 0;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .collapsible {
+        cursor: pointer;
+        padding: 10px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 18px;
+        background-color: #4caf50;
+        color: white;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .arrow {
+        transition: transform 0.2s ease;
+      }
+      .content {
+        padding: 0 18px;
+        display: none;
+        overflow: hidden;
+      }
+      #upcomingCA,
+      #completedCA {
+        flex: 1;
+        width: 80%;
+      }
+      .confirmation-message {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        width: 300px;
+        text-align: center;
+        border-radius: 8px;
+      }
+      .confirmation-message p {
+        margin-bottom: 10px;
+      }
+      .confirmation-message button {
+        margin: 5px;
+        padding: 8px 12px;
+        border: none;
+        background-color: #4caf50;
+        color: white;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .confirmation-message button.no {
+        background-color: #f44336;
+      }
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+      }
+      .popup-message {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .popup-message.error {
+        background-color: #f44336;
+      }
+      .popup-message .progress-bar {
+        height: 5px;
+        background-color: white;
+        border-radius: 2px;
+        width: 100%;
+        margin-top: 5px;
+        overflow: hidden;
+      }
+      .popup-message .progress {
+        height: 100%;
+        background-color: #4caf50;
+        width: 100%;
+        animation: progress 5s linear forwards;
+      }
+      .popup-message.error .progress {
+        background-color: #f44336;
+      }
+      @keyframes progress {
+        from {
+          width: 100%;
+        }
+        to {
+          width: 0;
+        }
+      }
+      #addCourse,
+      #saveCourse {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 5px;
+      }
+      .action-buttons button {
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      .action-buttons button.remove {
+        background-color: #f44336;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="logo-container">
+      <img
+        src="https://www.lpu.in/lpu-assets/images/logo/logo.svg"
+        alt="LPU Logo"
+        width="100"
+      />
+    </div>
+    <div id="upcomingCA">
+      <button class="collapsible">
+        Upcoming CA Details <span class="arrow">&#9660;</span>
+      </button>
+      <div class="content">
+        <table id="examTable">
+          <thead>
+            <tr>
+              <th>Course Code</th>
+              <th>Exam Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan="4">
+                <button id="addCourse">Add More Course</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div id="completedCA">
+      <button class="collapsible">
+        Completed CA Details <span class="arrow">&#9660;</span>
+      </button>
+      <div class="content">
+        <table id="completedTable">
+          <thead>
+            <tr>
+              <th>Course Code</th>
+              <th>Exam Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const collapsible = document.querySelectorAll(".collapsible");
+        collapsible.forEach((button) => {
+          const arrow = button.querySelector(".arrow");
+          button.addEventListener("click", function () {
+            this.classList.toggle("active");
+            const content = this.nextElementSibling;
+            if (content.style.display === "block") {
+              content.style.display = "none";
+              arrow.style.transform = "rotate(0deg)";
+            } else {
+              content.style.display = "block";
+              arrow.style.transform = "rotate(180deg)";
+            }
+          });
+        });
+
+        const showPopupMessage = (message, isError = false) => {
+          const popupMessage = document.createElement("div");
+          popupMessage.classList.add("popup-message", isError ? "error" : "");
+          popupMessage.innerHTML = `<span>${message}</span><div class="progress-bar"><div class="progress"></div></div>`;
+          document.body.appendChild(popupMessage);
+
+          setTimeout(() => {
+            document.body.removeChild(popupMessage);
+          }, 5000);
+        };
+
+        let newCourseRow = null;
+
+        document.getElementById("addCourse").addEventListener("click", () => {
+          if (!newCourseRow) {
+            const examTable = document
+              .getElementById("examTable")
+              .querySelector("tbody");
+            newCourseRow = document.createElement("tr");
+            newCourseRow.innerHTML = `
+                        <td contenteditable="true" style="background-color: #f9f9f9;">New Course</td>
+                        <td><input type="date" style="background-color: #f9f9f9;"></td>
+                        <td contenteditable="true" style="background-color: #f9f9f9;">Not Completed</td>
+                        <td><button id="saveCourse">Save</button></td>
+                    `;
+            examTable.insertBefore(newCourseRow, examTable.lastChild);
+          }
+        });
+
+        document.getElementById("examTable").addEventListener("click", (e) => {
+          if (e.target && e.target.id === "saveCourse") {
+            const examTable = document
+              .getElementById("examTable")
+              .querySelector("tbody");
+            const courseCode =
+              newCourseRow.querySelector("td:nth-child(1)").textContent;
+            const examDate = newCourseRow.querySelector(
+              "td:nth-child(2) input"
+            ).value;
+            const status =
+              newCourseRow.querySelector("td:nth-child(3)").textContent;
+
+            let rowClass = "";
+            if (status.toLowerCase() === "expected") {
+              rowClass = "yellow";
+            } else if (status.toLowerCase() === "soon") {
+              rowClass = "red";
+            } else {
+              rowClass = "orange";
+            }
+
+            newCourseRow.innerHTML = `
+                        <td>${courseCode}</td>
+                        <td>${examDate}</td>
+                        <td class="${rowClass}">${status}</td>
+                        <td class="action-buttons">
+                            <button class="edit">Edit</button>
+                            <button class="completed">Completed</button>
+                        </td>
+                    `;
+            newCourseRow.classList.add(rowClass);
+            newCourseRow = null;
+            showPopupMessage("New course added");
+          }
+        });
+
+        document.getElementById("examTable").addEventListener("click", (e) => {
+          if (e.target && e.target.nodeName === "BUTTON" && !e.target.id) {
+            const action = e.target.textContent.trim().toLowerCase();
+            const row = e.target.closest("tr");
+            const courseCode = row.querySelector("td:nth-child(1)").textContent;
+            if (action === "edit") {
+              row
+                .querySelectorAll(
+                  "td:nth-child(1), td:nth-child(2), td:nth-child(3)"
+                )
+                .forEach((cell) => {
+                  cell.contentEditable = true;
+                  cell.style.backgroundColor = "#f9f9f9";
+                });
+              row.querySelector(
+                "td:nth-child(2)"
+              ).innerHTML = `<input type="date" value="${
+                row.querySelector("td:nth-child(2)").textContent
+              }" style="background-color: #f9f9f9;">`;
+              e.target.textContent = "Save";
+            } else if (action === "save") {
+              row
+                .querySelectorAll(
+                  "td:nth-child(1), td:nth-child(2), td:nth-child(3)"
+                )
+                .forEach((cell) => {
+                  cell.contentEditable = false;
+                  cell.style.backgroundColor = "white";
+                });
+              row.querySelector("td:nth-child(2)").innerHTML =
+                row.querySelector("td:nth-child(2) input").value;
+              const statusCell = row.querySelector("td:nth-child(3)");
+              const status = statusCell.textContent.trim().toLowerCase();
+              if (status === "expected") {
+                row.classList.remove("orange", "red");
+                row.classList.add("yellow");
+              } else if (status === "soon") {
+                row.classList.remove("orange", "yellow");
+                row.classList.add("red");
+              } else {
+                row.classList.remove("yellow", "red");
+                row.classList.add("orange");
+              }
+              e.target.textContent = "Edit";
+              showPopupMessage(`Editing ${courseCode} saved`);
+            } else if (action === "completed") {
+              const overlay = document.createElement("div");
+              overlay.classList.add("overlay");
+              document.body.appendChild(overlay);
+
+              const confirmation = document.createElement("div");
+              confirmation.classList.add("confirmation-message");
+              confirmation.innerHTML = `
+                            <p>Are you sure you want to mark ${courseCode} as completed?</p>
+                            <button class="yes">Yes</button>
+                            <button class="no">No</button>
+                        `;
+              document.body.appendChild(confirmation);
+
+              confirmation
+                .querySelector(".yes")
+                .addEventListener("click", () => {
+                  row.classList.remove("orange", "yellow", "red");
+                  row.classList.add("green");
+                  row.querySelector("td:nth-child(3)").textContent =
+                    "Completed";
+                  row.querySelector(".action-buttons").innerHTML =
+                    '<button class="remove">Remove</button>';
+                  const completedTable =
+                    document.getElementById("completedTable");
+                  completedTable.appendChild(row);
+                  document.body.removeChild(confirmation);
+                  document.body.removeChild(overlay);
+                  showPopupMessage("Marked as completed");
+                });
+
+              confirmation
+                .querySelector(".no")
+                .addEventListener("click", () => {
+                  document.body.removeChild(confirmation);
+                  document.body.removeChild(overlay);
+                  showPopupMessage("Completion denied", true);
+                });
+            } else if (action === "remove") {
+              const courseCode =
+                row.querySelector("td:nth-child(1)").textContent;
+              row.remove();
+              showPopupMessage(`${courseCode} removed`);
+            }
+          }
+        });
+
+        // Handle removing rows from the Completed CA table
+        document
+          .getElementById("completedTable")
+          .addEventListener("click", (e) => {
+            if (e.target && e.target.className.includes("remove")) {
+              const row = e.target.closest("tr");
+              const courseCode =
+                row.querySelector("td:nth-child(1)").textContent;
+              row.remove();
+              showPopupMessage(`${courseCode} removed`);
+            }
+          });
+      });
+    </script>
+  </body>
+</html>
